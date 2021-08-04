@@ -1,4 +1,4 @@
-const MORSE_TABLE = {
+const mt = {
     '.-':     'a',
     '-...':   'b',
     '-.-.':   'c',
@@ -38,7 +38,30 @@ const MORSE_TABLE = {
 };
 
 function decode(expr) {
-    // write your solution here
+    if (!String.prototype.replaceAll) {
+        String.prototype.replaceAll = function(str, newStr) {
+            return this.replace(new RegExp(str, 'g'), newStr);
+    
+        };
+    };
+    const ma = Object.keys(mt);
+    const arr = expr.split('');
+    let strCode = '';
+    for (let i = 0; i < arr.length; i++) {
+        if (i > 0 && i % 10 === 0) strCode += ' ' + arr[i];
+        else strCode += arr[i];
+    }
+    const lettersCode = strCode.split(' ');
+    let ml = [];
+    lettersCode.forEach(i => ml.push(i.replaceAll('00', '').replaceAll('10', '.').replaceAll('11', '-')));
+    let str = '';
+    ml.forEach(i => {
+        if (i === '**********') str += ' ';
+        else ma.forEach(j => {
+            if (i === j) str += mt[`${j}`];
+        })
+    })
+    return str;
 }
 
 module.exports = {
